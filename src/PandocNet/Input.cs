@@ -1,25 +1,16 @@
 ﻿using CliWrap;
-using Replicant;
 
 namespace Pandoc;
 
 public class Input
 {
     string? file;
-    string? url;
     string? content;
     byte[]? bytes;
     Stream? stream;
 
     public Input(string value)
     {
-        if (value.StartsWith("http://") ||
-            value.StartsWith("https://"))
-        {
-            url = value;
-            return;
-        }
-
         if (File.Exists(value))
         {
             file = value;
@@ -54,12 +45,6 @@ public class Input
         if (bytes != null)
         {
             return PipeSource.FromBytes(bytes);
-        }
-
-        if (url != null)
-        {
-            var stream = HttpCache.Default.Stream(url);
-            return PipeSource.FromStream(stream);
         }
 
         if (content != null)
